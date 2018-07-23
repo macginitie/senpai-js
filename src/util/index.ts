@@ -142,7 +142,6 @@ export interface IHasParent {
   parent: string;
 }
 
-
 export enum TextAlign {
   "left" = "left",
   "right" = "right",
@@ -189,41 +188,41 @@ export function zSort(left: ISprite, right: ISprite): number {
 // 7. The interfaces can exist in util.ts
 
 export interface IPlaying {
-  parent : number;  // index to "the heap" managed by the engine (initialize to 0)
-  texture : string; // identifies the texture
-  id : string;      // internally unique id in the SoundSprite (or VideoSprite) object
-  current : number; // point in time when the IPlaying was paused (only updated on state change)
-  start : number;   // when the texture started playing
-  end : number;     // estimated time when the texture should stop playing
-  length : number;  // length of the audio clip
-  state : string;   // "playing" | "paused"
+  parent: number;  // index to "the heap" managed by the engine (initialize to 0)
+  texture: string; // identifies the texture
+  id: string;      // internally unique id in the SoundSprite (or VideoSprite) object
+  current: number; // point in time when the IPlaying was paused (only updated on state change)
+  start: number;   // when the texture started playing
+  end: number;     // estimated time when the texture should stop playing
+  length: number;  // length of the audio clip
+  state: string;   // "playing" | "paused"
 }
 
 export interface IPlayable {
-  playing : IPlaying[]
+  playing: IPlaying[];
 
   /**
    * Set texture before calling play()
    * @param texture the name of the texture
    */
-  setTexture(texture : string) : void;
+  setTexture(texture: string): void;
 
   /**
    * Play the texture that is current pointed to by setTexture()
    * @param pausedTarget a specific paused node that should resume playing
    * @return a record describing the features of the node that started playing
    */
-  play(pausedTarget ?: IPlaying) : IPlaying;
+  play(pausedTarget ?: IPlaying): IPlaying;
 
   /**
    * Stop and clean up an playing node
    * @param target the node to stop, or all playing nodes if not given
    */
-  stop(target ?: IPlaying) : void;
+  stop(target ?: IPlaying): void;
 
   /**
    * Pause a playing node, allowing it to be resumed by calling play() later.
    * @param target the node to stop, or all playing nodes if not given
    */
-  pause(target ?: IPlaying) : void;
+  pause(target ?: IPlaying): void;
 }

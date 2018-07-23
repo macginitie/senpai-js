@@ -6,6 +6,7 @@ import { IButton, ILoadButtonProps, loadButton } from "../view/Button";
 import { ICharacter, ILoadCharacterProps, loadCharacter } from "../view/Character";
 import { ICheckbox, ILoadCheckboxProps, loadCheckbox } from "../view/Checkbox";
 import { IClose, ILoadCloseProps, loadClose } from "../view/Close";
+import { IFontSourceMap, loadFonts } from "../view/fonts";
 import { ILabel, ILabelProps, loadLabel } from "../view/Label";
 import { ILoadPanelProps, IPanel, loadPanel } from "../view/Panel";
 import { ILoadSliderProps, ISlider, loadSlider } from "../view/Slider";
@@ -13,7 +14,6 @@ import { ILoadSoundSpriteProps, ISoundSprite, ISoundSpriteSheet, loadSoundSprite
 import { ISprite } from "../view/Sprite";
 import { IStage, IStageProps, Stage } from "../view/Stage";
 import { ILoadTextboxProps, ITextbox, loadTextbox } from "../view/Textbox";
-import { loadFonts, IFontSourceMap } from "../view/fonts";
 
 export interface ISpriteIndex {
   [id: string]: ISprite;
