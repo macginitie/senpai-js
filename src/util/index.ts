@@ -163,3 +163,79 @@ export enum TextBaseline {
 export function zSort(left: ISprite, right: ISprite): number {
   return left.z - right.z;
 }
+
+// IPlaying and IPlayable
+//
+// QUESTIONS:
+// 1. setTexture only defines the texture targeted by play(), not by any other method?
+// 2. setTexture behavior on invalid texture string (guess: noop)
+// 3. play() behavior when valid texture not set (guess: noop)
+// 4. play() return value when valid texture not set (guess : null)
+// 5. stop() affecting only playing nodes, or also paused nodes?
+// 6. any method taking an IPlaying that has finished (guess: noop)
+// 7. IPlaying and IPlayable interfaces in separate .ts file? (suggestion: Playable.ts)
+//
+// ANSWERS:
+// 1. Yes
+// 2. No. Throw new Exception("Texture (${texture}) not found on sprite
+// ${this.id}.");
+// 3. Yes. Pause on null pointer is noOp. We don't know what will happen at
+// runtime.
+// 4. Return null if you don't start playing something. Otherwise return the
+// IPlaying pointer.
+// 5. Stop affects every child node. If a child is specified, it only stops the
+// child.
+// 6. Correct. Use the metadata start + length > now is noOp.
+// 7. The interfaces can exist in util.ts
+
+export interface IPlaying {
+    parent : number;  // index to "the heap" managed by the engine (initialize to 0)
+    texture : string; // identifies the texture
+    id : string;      // internally unique id in the SoundSprite (or VideoSprite) object
+    current : number; // point in time when the IPlaying was paused (only updated on state change)
+    start : number;   // when the texture started playing
+    end : number;     // estimated time when the texture should stop playing
+    length : number;  // length of the audio clip
+    state : string;   // "playing" | "paused"
+}
+
+export interface IPlayable {
+    playing : IPlaying[]
+
+    /**
+     * Set texture before calling play()
+     * @param texture the name of the texture
+     */
+    setTexture(texture : string) : void;
+
+    /**
+     * Play the texture that is current pointed to by setTexture()
+     * @param pausedTarget a specific paused node that should resume playing
+     * @return a record describing the features of the node that started playing
+     */
+    play(pausedTarget ?: IPlaying) : IPlaying;
+
+    /**
+     * Stop and clean up an playing node
+     * @param target the node to stop, or all playing nodes if not given
+     */
+    stop(target ?: IPlaying) : void;
+
+    /**
+     * Pause a playing node, allowing it to be resumed by calling play() later.
+     * @param target the node to stop, or all playing nodes if not given
+     */
+    pause(target ?: IPlaying) : void;
+}
+
+// ISoundSpriteSheet
+export interface ISoundSpriteSheet {
+  resources: string[];
+  spritemap: {
+    [name: string]: {
+      start: number;
+      end: number;
+      loop: boolean;
+    };
+  };
+}
