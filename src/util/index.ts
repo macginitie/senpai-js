@@ -170,10 +170,6 @@ export enum PlayState {
 }
 
 export interface IPlayable {
-  play(): this;
-  pause(): this;
-  stop(): this;
-  setVolume(volume: number); //accepts number [0. 1]
   started: number; // timestamp when the media last began playing
   length: number; // media play length timespan
   start: number; // media start time
@@ -181,11 +177,20 @@ export interface IPlayable {
   loop: boolean; // does this media loop?
   state: PlayState; // self explainatory
   loaded: Promise<void>; // this should be a promise that resolves once the audio has loaded
+  play(): this;
+  pause(): this;
+  stop(): this;
+  setVolume(volume: number); // accepts number [0. 1]
 }
 
 export interface IPlayableProps {
   source: Promise<Response>;
   texture: string; // this should be name of the texture in the spritesheet
+}
+
+export interface IAudioProps {
+  definition: ISoundSpriteSheet; // this will be the provided sound sprite sheet
+  context: AudioContext; // provided audio context for creating the sound sprite
 }
 
 export interface IAudio extends IPlayable {
