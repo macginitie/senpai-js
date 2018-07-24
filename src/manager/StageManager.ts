@@ -10,7 +10,7 @@ import { IFontSourceMap, loadFonts } from "../view/fonts";
 import { ILabel, ILabelProps, loadLabel } from "../view/Label";
 import { ILoadPanelProps, IPanel, loadPanel } from "../view/Panel";
 import { ILoadSliderProps, ISlider, loadSlider } from "../view/Slider";
-import { ILoadSoundSpriteProps, ISoundSprite, ISoundSpriteSheet, loadSoundSprite } from "../view/SoundSprite";
+//import { ILoadSoundSpriteProps, ISoundSprite, ISoundSpriteSheet, loadSoundSprite } from "../view/SoundSprite";
 import { ISprite } from "../view/Sprite";
 import { IStage, IStageProps, Stage } from "../view/Stage";
 import { ILoadTextboxProps, ITextbox, loadTextbox } from "../view/Textbox";
