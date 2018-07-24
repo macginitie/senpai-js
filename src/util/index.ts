@@ -169,6 +169,21 @@ export enum PlayState {
   Stopped,
 }
 
+export interface ISoundSpriteSheetTexture {
+  [name: string]: {
+    start: number;
+    end: number;
+    loop: boolean;
+  };
+}
+
+export interface ISoundSpriteSheet {
+  resources: string[];
+  spritemap: {
+    [name: string]: ISoundSpriteSheetTexture;
+  };
+}
+
 export interface IPlayable {
   started: number; // timestamp when the media last began playing
   length: number; // media play length timespan
@@ -188,7 +203,7 @@ export interface IPlayableProps {
   texture: string; // this should be name of the texture in the spritesheet
 }
 
-export interface IAudioProps {
+export interface IAudioProps extends IPlayableProps {
   definition: ISoundSpriteSheet; // this will be the provided sound sprite sheet
   context: AudioContext; // provided audio context for creating the sound sprite
 }

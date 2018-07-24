@@ -1,10 +1,15 @@
-import {IAudio, IAudioProps} from "../util";
+import {IAudio, IAudioProps, ILoadProps, ISoundSpriteSheet, PlayState } from "../util";
 
 export interface ISFX extends IAudio {
   loop: false; // it will always be false
 }
 
 export interface ISFXProps extends IAudioProps {
+}
+
+export interface ILoadSFXProps extends ILoadProps {
+  name: string;
+  texture: string;
 }
 
 export class SFXSprite implements ISFX {
@@ -60,6 +65,7 @@ export class SFXSprite implements ISFX {
       throw new Error(`setVolume() accepts a number between 0 and 1; got ${volume}.`);
     }
     this.gain.gain.value = volume;
+    return this;
   }
 
   /**
@@ -84,7 +90,7 @@ export class SFXSprite implements ISFX {
    * 7. clean up audio source node and disconnect it from the destination
    */
   private createPlayInstance(): void {
-    const node = this.context.createSourceBuffer();
+    const node = this.context.createBufferSource();
     node.buffer = this.source;
     node.loop = this.loop; // false
     // TODO: 3
