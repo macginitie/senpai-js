@@ -46,8 +46,12 @@ export class SFXSprite implements ISFX {
   }
 
   // no ops
-  public stop(): this;
-  public pause(): this;
+  public stop(): this {
+    return this;
+  }
+  public pause(): this {
+    return this;
+  }
 
   // sets the gainNode.gain.value property
   // accepts [0..1]
