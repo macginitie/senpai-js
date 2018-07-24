@@ -10,12 +10,12 @@ export interface ISFXProps extends IAudioProps {
 export class SFXSprite implements ISFX {
 
   // fields from IPlayable
-  public started: number;
-  public length: number;
-  public start: number;
-  public end: number;
+  public started: number = 0;
+  public length: number = 0;
+  public start: number = 0;
+  public end: number = 0;
   public loop: false = false;
-  public state: PlayState; // unused
+  public state: PlayState = PlayState.Stopped; // unused
   public loaded: Promise<void>;
 
   // fields from IAudio
@@ -78,7 +78,7 @@ export class SFXSprite implements ISFX {
    * 5. call play(now, offset, duration)
    * 6. listen to ended event (look up the event)
    * 7. clean up audio source node and disconnect it from the destination
-   **/
+   */
   private createPlayInstance(): void {
     const node = this.context.createSourceBuffer();
     node.buffer = this.source;
@@ -89,9 +89,10 @@ export class SFXSprite implements ISFX {
     const now = Date.now();
     node.start(now, this.start, this.length);
 
-    node.addEventListener("ended", e => {
-      node.disconnect(this.gain);
-      node.removeEventListener("ended");
+    const gain = this.gain; // must be accessed inside of named function
+    node.addEventListener("ended", function callback(e) {
+      node.disconnect(gain);
+      node.removeEventListener("ended", callback);
     });
   }
 }
