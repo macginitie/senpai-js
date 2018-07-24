@@ -39,6 +39,9 @@ export class SFXSprite implements ISFX {
     // TODO: 1
     this.context = props.context;
     this.definition = props.definition;
+    this.start = this.definition.start;
+    this.end = this.definition.end;
+    this.length = this.definition.end - this.definition.start;
     this.gain = props.context.createGain();
     this.loaded = this.createSource(props.source, props.context);
     this.destination = props.context.destination;
