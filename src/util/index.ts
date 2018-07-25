@@ -170,11 +170,9 @@ export enum PlayState {
 }
 
 export interface ISoundSpriteSheetTexture {
-  [name: string]: {
-    start: number;
-    end: number;
-    loop: boolean;
-  };
+  start: number;
+  end: number;
+  loop: boolean;
 }
 
 export interface ISoundSpriteSheet {
