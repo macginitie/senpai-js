@@ -10,7 +10,7 @@ import { IClose, ILoadCloseProps, loadClose } from "../view/Close";
 import { IFontSourceMap, loadFonts } from "../view/fonts";
 import { ILabel, ILabelProps, loadLabel } from "../view/Label";
 import { ILoadPanelProps, IPanel, loadPanel } from "../view/Panel";
-import {ILoadSFXProps, ISFXProps, SFXSprite} from "../view/SFXSprite";
+import {ILoadSFXProps, ISFXProps, ISFX, SFXSprite} from "../view/SFXSprite";
 import { ILoadSliderProps, ISlider, loadSlider } from "../view/Slider";
 import { ISprite } from "../view/Sprite";
 import { IStage, IStageProps, Stage } from "../view/Stage";
@@ -45,7 +45,7 @@ export interface IStageManager extends IStage {
   createClose(...props: ILoadCloseProps[]): Promise<IClose>;
   createLabel(...props: ILabelProps[]): Promise<ILabel>;
   createPanel(...props: ILoadPanelProps[]): Promise<IPanel>;
-  createSFXSprite(...props: ILoadSFXProps[]): Promise<IPlayable>;
+  createSFXSprite(...props: ILoadSFXProps[]): Promise<ISFX>;
   createSlider(...props: ILoadSliderProps[]): Promise<ISlider>;
   createTextbox(...props: ILoadTextboxProps[]): Promise<ITextbox>;
   loadFonts(): Promise<void>;
@@ -150,16 +150,17 @@ export class StageManager extends Stage implements IStageManager {
   }
 
   // may become more general later (e.g. createAudio())
-  public async createSFXSprite(...props: ILoadSFXProps[]): Promise<IPlayable> {
+  public async createSFXSprite(...props: ILoadSFXProps[]): Promise<ISFX> {
     const loadOptions: ILoadSFXProps = Object.assign({}, ...props);
     const options: ISFXProps = Object.assign({}, ...props);
     // TODO: Fix this
-    //    options.src = StageManager.SoundsImports[options.name].mp3
-    //      || StageManager.SoundsImports[options.name].ogg
-    //      || StageManager.SoundsImports[options.name].wav
-    //      || StageManager.SoundsImports[options.name].flac;
+    loadOptions.src = StageManager.SoundsImports[loadOptions.name].mp3
+    || StageManager.SoundsImports[loadOptions.name].ogg
+    || StageManager.SoundsImports[loadOptions.name].wav
+    || StageManager.SoundsImports[loadOptions.name].flac;
     options.definition = StageManager.SoundsImports[loadOptions.name].json;
     options.context = this.audioContext;
+    options.source = fetch(loadOptions.src);
     return Promise.resolve(new SFXSprite(options));
   }
 

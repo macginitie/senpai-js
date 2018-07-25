@@ -78,7 +78,7 @@ export class SFXSprite implements ISFX {
    * 4. sets source property
    */
   private async createSource(res: Promise<Response>, context: AudioContext): Promise<void> {
-    const resp = await res;
+    const resp : Response = await res;
     const buffer = await resp.arrayBuffer();
     this.source = await context.decodeAudioData(buffer);
   }
@@ -88,7 +88,7 @@ export class SFXSprite implements ISFX {
    * 2. set node.buffer = this.source
    * 3. set source metadata
    * 4. connect node to destination
-   * 5. call play(now, offset, duration)
+   * 5. call start(0, offset, duration)
    * 6. listen to ended event (look up the event)
    * 7. clean up audio source node and disconnect it from the destination
    */
@@ -100,7 +100,7 @@ export class SFXSprite implements ISFX {
     node.connect(this.gain);
 
     const now = Date.now();
-    node.start(now, this.start, this.length);
+    node.start(0, this.start, this.length);
 
     const gain = this.gain; // must be accessed inside of named function
     node.addEventListener("ended", function callback(e) {
