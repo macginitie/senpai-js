@@ -1,7 +1,7 @@
 
 import * as eases from "../ease";
 import { chain } from "../matrix";
-import { ISpriteSheet } from "../util";
+import { IAudio, ISpriteSheet } from "../util";
 import {IPlayable, ISoundSpriteSheet} from "../util";
 import { IButton, ILoadButtonProps, loadButton } from "../view/Button";
 import { ICharacter, ILoadCharacterProps, loadCharacter } from "../view/Character";
@@ -10,7 +10,7 @@ import { IClose, ILoadCloseProps, loadClose } from "../view/Close";
 import { IFontSourceMap, loadFonts } from "../view/fonts";
 import { ILabel, ILabelProps, loadLabel } from "../view/Label";
 import { ILoadPanelProps, IPanel, loadPanel } from "../view/Panel";
-import {ILoadSFXProps, ISFXProps, ISFX, SFXSprite} from "../view/SFXSprite";
+import {ILoadSFXProps, ISFX, ISFXProps, SFXSprite} from "../view/SFXSprite";
 import { ILoadSliderProps, ISlider, loadSlider } from "../view/Slider";
 import { ISprite } from "../view/Sprite";
 import { IStage, IStageProps, Stage } from "../view/Stage";
@@ -45,7 +45,7 @@ export interface IStageManager extends IStage {
   createClose(...props: ILoadCloseProps[]): Promise<IClose>;
   createLabel(...props: ILabelProps[]): Promise<ILabel>;
   createPanel(...props: ILoadPanelProps[]): Promise<IPanel>;
-  createSFXSprite(...props: ILoadSFXProps[]): Promise<ISFX>;
+  createSFXSprite(...props: ISFXProps[]): IAudio;
   createSlider(...props: ILoadSliderProps[]): Promise<ISlider>;
   createTextbox(...props: ILoadTextboxProps[]): Promise<ITextbox>;
   loadFonts(): Promise<void>;
@@ -149,19 +149,15 @@ export class StageManager extends Stage implements IStageManager {
     return loadSlider(options);
   }
 
-  // may become more general later (e.g. createAudio())
-  public async createSFXSprite(...props: ILoadSFXProps[]): Promise<ISFX> {
-    const loadOptions: ILoadSFXProps = Object.assign({}, ...props);
+  public createSFXSprite(...props: ISFXProps[]): IAudio {
     const options: ISFXProps = Object.assign({}, ...props);
-    // TODO: Fix this
-    loadOptions.src = StageManager.SoundsImports[loadOptions.name].mp3
-    || StageManager.SoundsImports[loadOptions.name].ogg
-    || StageManager.SoundsImports[loadOptions.name].wav
-    || StageManager.SoundsImports[loadOptions.name].flac;
-    options.definition = StageManager.SoundsImports[loadOptions.name].json;
-    options.context = this.audioContext;
-    options.source = fetch(loadOptions.src);
-    return Promise.resolve(new SFXSprite(options));
+    const soundImport = StageManager.SoundsImports[options.name];
+    options.definition = soundImport.json; // definition
+    options.source = fetch(soundImport.mp3
+      || soundImport.ogg
+      || soundImport.wav
+      || soundImport.flac);
+    return new SFXSprite(options);
   }
 
   public createTextbox(...props: ILoadTextboxProps[]): Promise<ITextbox> {

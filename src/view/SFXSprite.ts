@@ -78,7 +78,7 @@ export class SFXSprite implements ISFX {
    * 4. sets source property
    */
   private async createSource(res: Promise<Response>, context: AudioContext): Promise<void> {
-    const resp : Response = await res;
+    const resp: Response = await res;
     const buffer = await resp.arrayBuffer();
     this.source = await context.decodeAudioData(buffer);
   }
