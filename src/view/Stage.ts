@@ -1,6 +1,6 @@
+import { IContainer } from "./Container";
 import { IInteractionManagerProps, InteractionManager } from "./InteractionManager";
 import { ISprite } from "./Sprite";
-import { IContainer } from "./Container";
 
 export interface IStageProps extends IInteractionManagerProps {
 

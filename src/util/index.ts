@@ -99,67 +99,118 @@ export interface ITextureMap {
 }
 
 export async function loadImage(src: string): Promise<ImageBitmap> {
-  const res = await fetch(src);
-  const blob = await res.blob();
-  const bmp = await createImageBitmap(blob);
-  return bmp;
-}
+    const res = await fetch(src);
+    const blob = await res.blob();
+    const bmp = await createImageBitmap(blob);
+    return bmp;
+  }
 
 export async function loadSoundBuffer(source: Promise<Response>, start: number, finish: number) {
-  const res = await source;
-  const buffer = await res.arrayBuffer();
-}
+    const res = await source;
+    const buffer = await res.arrayBuffer();
+  }
 
 export interface ILoadProps {
-  src: string;
-  definition: ISpriteSheet;
-}
+    src: string;
+    definition: ISpriteSheet;
+  }
 
 export interface IPadding {
-  left: number;
-  right: number;
-  top: number;
-  bottom: number;
-}
+    left: number;
+    right: number;
+    top: number;
+    bottom: number;
+  }
 
 export async function createTextureMap(definition: ISpriteSheet, img: Promise<ImageBitmap>) {
-  const textures: ITextureMap = {};
-  await Promise.all(
-    Object.entries(definition.frames).map(async ([desc, frame], i) => {
-      textures[desc] = await createImageBitmap(
-        await img,
-        frame.frame.x,
-        frame.frame.y,
-        frame.frame.w,
-        frame.frame.h,
-      );
-    }),
-  );
-  return textures;
-}
+    const textures: ITextureMap = {};
+    await Promise.all(
+      Object.entries(definition.frames).map(async ([desc, frame], i) => {
+        textures[desc] = await createImageBitmap(
+          await img,
+          frame.frame.x,
+          frame.frame.y,
+          frame.frame.w,
+          frame.frame.h,
+        );
+      }),
+    );
+    return textures;
+  }
 
 export interface IHasParent {
-  parent: string;
-}
-
+    parent: string;
+  }
 
 export enum TextAlign {
-  "left" = "left",
-  "right" = "right",
-  "center" = "center",
-  "start" = "start",
-  "end" = "end",
-}
+    "left" = "left",
+    "right" = "right",
+    "center" = "center",
+    "start" = "start",
+    "end" = "end",
+  }
 
 export enum TextBaseline {
-  "top" = "top",
-  "hanging" = "hanging",
-  "middle" = "middle",
-  "alphabetic" = "alphabetic",
-  "ideographic" = "ideographic",
-  "bottom" = "bottom",
-}
+    "top" = "top",
+    "hanging" = "hanging",
+    "middle" = "middle",
+    "alphabetic" = "alphabetic",
+    "ideographic" = "ideographic",
+    "bottom" = "bottom",
+  }
 
 export function zSort(left: ISprite, right: ISprite): number {
-  return left.z - right.z;
+    return left.z - right.z;
+  }
+
+export enum PlayState {
+    Playing,
+    Paused,
+    Stopped,
+  }
+
+export interface ISoundSpriteSheetTexture {
+    start: number;
+    end: number;
+    loop: boolean;
+  }
+
+export interface ISoundSpriteSheet {
+    resources: string[];
+    spritemap: {
+      [name: string]: ISoundSpriteSheetTexture;
+    };
+  }
+
+export interface IPlayable {
+    started: number; // timestamp when the media last began playing
+    length: number; // media play length timespan
+    start: number; // media start time
+    end: number; // media end time
+    loop: boolean; // does this media loop?
+    state: PlayState; // self explainatory
+    loaded: Promise<void>; // this should be a promise that resolves once the audio has loaded
+    play(): this;
+    pause(): this;
+    stop(): this;
+    setVolume(volume: number); // accepts number [0. 1]
+  }
+
+export interface IPlayableProps {
+  source: Promise<Response>;
+  texture: string; // this should be name of the texture in the spritesheet
+}
+
+export interface IAudioProps extends IPlayableProps {
+  definition: ISoundSpriteSheet; // this will be the provided sound sprite sheet
+  context: AudioContext; // provided audio context for creating the sound sprite
+  name: string; // determines the name of the audio clip
+}
+
+export interface IAudio extends IPlayable {
+  gain: GainNode; // controls volume
+  source: AudioBuffer; // is null until the audioBuffer is loaded
+  destination: AudioNode;
+  definition: ISoundSpriteSheet; // this will be the provided sound sprite sheet
+  context: AudioContext; // provided audio context for creating the sound sprite
 }

@@ -1,18 +1,17 @@
 import { EventEmitter } from "events";
-import { IInteractionPoint } from "../util";
-import { ISoundSprite } from "./SoundSprite";
+import { IInteractionPoint, IPlayable } from "../util";
 import { ISprite } from "./Sprite";
 
 export interface IContainer {
   sprites: ISprite[];
-  soundSprites: ISoundSprite[];
+  playables: IPlayable[];
   points: IInteractionPoint[];
   audioContext: AudioContext;
 
   addSprite(sprite: ISprite): this;
   removeSprite(sprite: ISprite): this;
-  addSoundSprite(sprite: ISoundSprite): this;
-  removeSoundSprite(sprite: ISoundSprite): this;
+  addPlayable(sprite: IPlayable): this;
+  removePlayable(sprite: IPlayable): this;
   addPoint(point: IInteractionPoint): this;
   removePoint(point: IInteractionPoint): this;
 }
@@ -24,7 +23,7 @@ export interface IContainerProps {
 export class Container extends EventEmitter implements IContainer {
 
   public sprites: ISprite[] = [];
-  public soundSprites: ISoundSprite[] = [];
+  public playables: IPlayable[] = [];
   public points: IInteractionPoint[] = [];
   public audioContext: AudioContext = null;
 
@@ -47,18 +46,20 @@ export class Container extends EventEmitter implements IContainer {
     return this;
   }
 
-  public addSoundSprite(sprite: ISoundSprite): this {
-    if (!this.soundSprites.includes(sprite)) {
-      this.soundSprites.push(sprite);
-      sprite.gain.connect(this.audioContext.destination);
+  public addPlayable(sprite: IPlayable): this {
+    if (!this.playables.includes(sprite)) {
+      this.playables.push(sprite);
+      // NOTE: This may be audio specific?
+      //      sprite.gain.connect(this.audioContext.destination);
     }
     return this;
   }
 
-  public removeSoundSprite(sprite: ISoundSprite): this {
-    if (this.soundSprites.includes(sprite)) {
-      this.soundSprites.splice(this.soundSprites.indexOf(sprite), 1);
-      sprite.gain.disconnect(this.audioContext.destination);
+  public removePlayable(sprite: IPlayable): this {
+    if (this.playables.includes(sprite)) {
+      this.playables.splice(this.playables.indexOf(sprite), 1);
+      // NOTE: This may be audio specific?
+      //      sprite.gain.disconnect(this.audioContext.destination);
     }
     return this;
   }

@@ -1,6 +1,8 @@
 import config from "../application.config";
 import { IStageManager, IStageManagerProps, StageManager } from "./manager/StageManager";
 import * as m from "./matrix";
+import {IAudio} from "./util";
+import { ISFX, SFXSprite } from "./view/SFXSprite";
 
 const props: IStageManagerProps = {
   audioContext: new AudioContext(),
@@ -32,20 +34,17 @@ requestAnimationFrame(frame);
     definition: null,
   });
   sm.addSprite(button);
-  const sound = await sm.createSoundSprite({
-    buffer: null,
-    context: null,
-    definition: null,
-    id: "splash",
-    name: "splash",
+
+  const sound: IAudio = await sm.createSFXSprite({
+    name: "beep",
     texture: "texture",
     source: null,
-    src: null,
-    volume: 1,
+    context: null,
+    definition: null,
   });
+  sound.gain.connect(sm.audioContext.destination);
 
   button.on("click", () => {
-    sound.stop();
     sound.play();
-  })
+  });
 }());
