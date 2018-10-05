@@ -22,7 +22,7 @@ This folder contains an `index.ts` file for all the ease functions. Props to `b-
 type EaseFunction = (value: number /* range: [0-100] */) => number; /* range: [0-100] */
 ```
 
-The `value` parameter is a `Float` ratio that represents the linear length of time that has past relative to how long the animation needs to take. For instance, if the animation just started, `value` should be `0`. If the animation has completed, it should return `100`.  A quadratic ease function would return a `value` distribution that is curved quadratically.
+The `value` parameter is a `Float` ratio that represents the linear length of time that has passed relative to how long the animation needs to take. For instance, if the animation just started, `value` should be `0`. If the animation has completed, it should return `100`.  A quadratic ease function would return a `value` distribution that is curved quadratically.
 
 ### `./src/manager`
 
